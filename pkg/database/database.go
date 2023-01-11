@@ -23,3 +23,13 @@ func Connect(dsn string) {
 		fmt.Println(err.Error())
 	}
 }
+
+func IsExist(table, filed, value string) bool {
+	sql_ := fmt.Sprintf("SELECT %s FROM %s WHERE %s=%s", filed, table, filed, value)
+	var val string
+	err := SQLDB.QueryRow(sql_).Scan(&val)
+	if err != nil {
+		return false
+	}
+	return true
+}
