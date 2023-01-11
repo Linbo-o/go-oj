@@ -7,6 +7,7 @@ import (
 	"go-oj/bootstrap"
 	"go-oj/config"
 	pkgConfig "go-oj/pkg/config"
+	"go-oj/pkg/database"
 )
 
 func init() {
@@ -21,6 +22,11 @@ func main() {
 	pkgConfig.InitConfig(env)
 
 	r := gin.New()
+	//1、设置sql数据库
+	bootstrap.SetupDatabase()
+	_, er := database.DB.Exec("INSERT INTO user_basic (name,identity)values(?,?)", "linb", "12345")
+	fmt.Println(er)
+	//2、设置路由
 	bootstrap.SetupRoute(r)
 
 	err := r.Run(fmt.Sprintf(":%v", pkgConfig.Get("app.port")))
