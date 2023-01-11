@@ -25,3 +25,24 @@ func SignupExistPhone(data interface{}, c *gin.Context) map[string][]string {
 
 	return validate(rules, messages, data)
 }
+
+type SignupEmailExistRequest struct {
+	Email string `json:"email" valid:"email"`
+}
+
+func SignupExistEmail(data interface{}, c *gin.Context) map[string][]string {
+	//1、定制规则
+	rules := govalidator.MapData{
+		"email": []string{"required", "email"},
+	}
+
+	//2、定制错误信息
+	messages := govalidator.MapData{
+		"email": []string{
+			"required:邮箱是必填项",
+			"email:必须要符合email格式",
+		},
+	}
+
+	return validate(rules, messages, data)
+}
