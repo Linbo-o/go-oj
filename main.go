@@ -7,6 +7,8 @@ import (
 	"go-oj/bootstrap"
 	"go-oj/config"
 	pkgConfig "go-oj/pkg/config"
+	"go-oj/pkg/redis"
+	"time"
 )
 
 func init() {
@@ -26,7 +28,10 @@ func main() {
 	//gin.SetMode(gin.ReleaseMode)
 	//2、设置sql数据库
 	bootstrap.SetupDatabase()
-	//3、设置路由
+	//3、设置redis
+	bootstrap.SetupRedis()
+	redis.Redis.Set("name", "lin", time.Minute*5)
+	//4、设置路由
 	bootstrap.SetupRoute(r)
 
 	err := r.Run(fmt.Sprintf(":%v", pkgConfig.Get("app.port")))
