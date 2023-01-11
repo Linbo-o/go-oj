@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go-oj/app/models/user"
 	"go-oj/bootstrap"
 	"go-oj/config"
 	pkgConfig "go-oj/pkg/config"
@@ -22,12 +21,11 @@ func main() {
 	pkgConfig.InitConfig(env)
 
 	r := gin.New()
-	//1、设置sql数据库
+	//1、设置日志
+	bootstrap.SetupLogger()
+	//2、设置sql数据库
 	bootstrap.SetupDatabase()
-	//_, er := database.DB.Exec("INSERT INTO user_basic (name,identity,phone)values(?,?,?)", "lin", "12345", "15086630696")
-	//fmt.Println(er)
-	fmt.Println(user.IsPhoneExist("15086630696"))
-	//2、设置路由
+	//3、设置路由
 	bootstrap.SetupRoute(r)
 
 	err := r.Run(fmt.Sprintf(":%v", pkgConfig.Get("app.port")))

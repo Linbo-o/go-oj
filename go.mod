@@ -8,6 +8,8 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.14.0
+	go.uber.org/zap v1.24.0
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
 require (
@@ -32,6 +34,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
+	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
