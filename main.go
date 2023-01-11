@@ -23,6 +23,7 @@ func main() {
 	r := gin.New()
 	//1、设置日志
 	bootstrap.SetupLogger()
+	//gin.SetMode(gin.ReleaseMode)
 	//2、设置sql数据库
 	bootstrap.SetupDatabase()
 	//3、设置路由
