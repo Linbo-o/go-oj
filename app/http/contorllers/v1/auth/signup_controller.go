@@ -2,14 +2,14 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-oj/app/http/v1/contorllers"
+	"go-oj/app/http/contorllers/v1"
 	"go-oj/app/models/user"
 	"go-oj/app/requests"
 	"net/http"
 )
 
 type SignupController struct {
-	contorllers.BaseAPIController
+	v1.BaseAPIController
 }
 
 func (sc *SignupController) IsPhoneExist(c *gin.Context) {
