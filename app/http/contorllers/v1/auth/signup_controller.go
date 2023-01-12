@@ -6,6 +6,7 @@ import (
 	"go-oj/app/models/user"
 	"go-oj/app/requests"
 	"go-oj/pkg/helpers"
+	jwtpkg "go-oj/pkg/jwt"
 	"go-oj/pkg/logger"
 	"go-oj/pkg/response"
 	"net/http"
@@ -61,6 +62,8 @@ func (sc *SignupController) SignupUsingPhone(c *gin.Context) {
 	if ok := u.Create(); !ok {
 		response.Abort500(c, "创建数据失败")
 	} else {
-		response.Success(c)
+		c.JSON(http.StatusOK, gin.H{
+			"token": jwtpkg.NewJWT().IssueToken(u.Identity, u.Name),
+		})
 	}
 }

@@ -5,6 +5,7 @@ import (
 	v1 "go-oj/app/http/contorllers/v1"
 	"go-oj/app/requests"
 	"go-oj/pkg/auth"
+	jwtpkg "go-oj/pkg/jwt"
 	"net/http"
 )
 
@@ -28,8 +29,7 @@ func (lc *LoginController) LoginByPhone(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"token": "登陆成功",
-			"user":  u,
+			"token": jwtpkg.NewJWT().IssueToken(u.Identity, u.Name),
 		})
 	}
 }
