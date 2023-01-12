@@ -10,6 +10,7 @@ import (
 	"go-oj/pkg/helpers"
 	"go-oj/pkg/logger"
 	"go-oj/pkg/response"
+	"net/http"
 )
 
 type ProblemController struct {
@@ -58,4 +59,18 @@ func (pro *ProblemController) ProblemCreate(c *gin.Context) {
 	} else {
 		response.Success(c)
 	}
+}
+
+func (pro *ProblemController) GetProblemList(c *gin.Context) {
+	//1、绑定参数并检验
+	request := requests.GetProblemListRequest{}
+	if ok := requests.Validate(c, &request, requests.GetProblemList); !ok {
+		return
+	}
+
+	//2、获取列表
+	list := problem.GetProblemList(request.Size, request.Page)
+	c.JSON(http.StatusOK, gin.H{
+		"problem_list": list,
+	})
 }

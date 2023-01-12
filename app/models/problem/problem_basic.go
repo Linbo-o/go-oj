@@ -67,3 +67,29 @@ func (p *ProblemBasic) Create() bool {
 	}
 	return true
 }
+
+// GetProblemList 返回问题的 title-identity 列表
+func GetProblemList(size, page int) map[string]string {
+	//1、计算偏移量
+	offset := (page - 1) * size
+
+	//2、访问数据库
+	sql := "SELECT identity,title FROM problem_basic WHERE id>?"
+	rows, err := database.DB.Queryx(sql, offset)
+	if err != nil {
+		logger.LogIf(err)
+		return nil
+	}
+	defer rows.Close()
+	list := make(map[string]string)
+	var identity, title string
+	for rows.Next() {
+		err := rows.Scan(&identity, &title)
+		if err != nil {
+			logger.LogIf(err)
+			return nil
+		}
+		list[title] = identity
+	}
+	return list
+}

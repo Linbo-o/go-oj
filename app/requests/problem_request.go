@@ -42,3 +42,22 @@ func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
 	//3、对上面规则进行验证，返回错误信息
 	return validate(rules, message, data)
 }
+
+type GetProblemListRequest struct {
+	Size int `json:"size" valid:"size"`
+	Page int `json:"page" valid:"page"`
+}
+
+func GetProblemList(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"size": []string{"required"},
+		"page": []string{"required"},
+	}
+
+	messages := govalidator.MapData{
+		"size": []string{"required:size是必填项"},
+		"page": []string{"required:page是必填项"},
+	}
+
+	return validate(rules, messages, data)
+}
