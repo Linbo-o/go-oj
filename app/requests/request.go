@@ -21,7 +21,7 @@ func Validate(c *gin.Context, obj interface{}, handler ValidatorFunc) bool {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error": errs,
 		})
-		logger.ErrorJSON("validate", "验证失败", errs)
+		logger.DebugJSON("validate", "验证失败", errs)
 		return false
 	}
 	return true
