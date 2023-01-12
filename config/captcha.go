@@ -22,7 +22,7 @@ func init() {
 			"dotcount": 80,
 
 			// 过期时间，单位是分钟
-			"expire_time": 15,
+			"expire_time": 150,
 
 			// debug 模式下的过期时间，方便本地开发调试
 			"debug_expire_time": 10080,
