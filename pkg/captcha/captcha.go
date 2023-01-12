@@ -43,6 +43,6 @@ func (cp *Captcha) GenCaptcha() (id string, b64s string, err error) {
 	return cp.Base64Captcha.Generate()
 }
 
-func (cp *Captcha) Verify() bool {
-	return cp.Verify()
+func (cp *Captcha) Verify(id, answer string, clear bool) bool {
+	return cp.Base64Captcha.Verify(id, answer, clear)
 }

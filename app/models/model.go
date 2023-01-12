@@ -9,6 +9,6 @@ type BaseModel struct {
 
 // CommonTimestampsField 时间戳
 type CommonTimestampsField struct {
-	CreatedAt time.Time `db:"created_at;index;" json:"created_at,omitempty"`
-	UpdatedAt time.Time `db:"updated_at;index;" json:"updated_at,omitempty"`
+	CreatedAt time.Time `db:"created_at" json:"created_at,omitempty"`
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at,omitempty"`
 }

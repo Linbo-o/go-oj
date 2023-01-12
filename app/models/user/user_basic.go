@@ -2,6 +2,9 @@ package user
 
 import (
 	"go-oj/app/models"
+	"go-oj/pkg/database"
+	"go-oj/pkg/logger"
+	"time"
 )
 
 type UserBasic struct {
@@ -17,4 +20,18 @@ type UserBasic struct {
 	IsAdmin   int    `db:"is_admin" json:"is_admin"`     // 是否是管理员【0-否，1-是】
 
 	models.CommonTimestampsField
+}
+
+func (u *UserBasic) Create() bool {
+	u.CommonTimestampsField.CreatedAt = time.Now()
+	u.CommonTimestampsField.UpdatedAt = time.Now()
+
+	sql := "INSERT INTO user_basic (identity,name,password,phone,mail,pass_num,submit_num,is_admin,created_at,updated_at)" +
+		"VALUES(:identity,:name,:password,:phone,:mail,:pass_num,:submit_num,:is_admin,:created_at,:updated_at)"
+	_, err := database.DB.NamedExec(sql, u)
+	if err != nil {
+		logger.DebugString("create_user", "create", err.Error())
+		return false
+	}
+	return true
 }

@@ -36,7 +36,7 @@ func NewRedisClient(address string, username string, password string, db int) *R
 	return rds
 }
 
-func (rds *RedisClient) Ping() error {
+func (rds RedisClient) Ping() error {
 	return rds.Client.Ping(rds.Context).Err()
 }
 

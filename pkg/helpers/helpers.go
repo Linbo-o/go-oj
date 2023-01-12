@@ -4,6 +4,7 @@ package helpers
 import (
 	"crypto/rand"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"io"
 	"reflect"
 	"time"
@@ -52,4 +53,8 @@ func RandomNumber(length int) string {
 		b[i] = table[int(b[i])%len(table)]
 	}
 	return string(b)
+}
+
+func GetUUID() string {
+	return uuid.NewV4().String()
 }
