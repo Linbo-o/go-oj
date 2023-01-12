@@ -23,7 +23,7 @@ func (pro *ProblemController) ProblemCreate(c *gin.Context) {
 	if ok := requests.Validate(c, &request, requests.ProblemCreate); !ok {
 		return
 	}
-	logger.Dump(request)
+	logger.Dump(request.TestCases)
 	//2、创建建数据
 	//2.1、问题基础数据
 	p := problem.ProblemBasic{
@@ -44,7 +44,7 @@ func (pro *ProblemController) ProblemCreate(c *gin.Context) {
 	p.Categories = problemCategories
 	//2.3、问题测试用例数据处理
 	testCases := make([]*testcase.TestCase, 0)
-	for _, ca := range p.TestCases {
+	for _, ca := range request.TestCases {
 		testCases = append(testCases, &testcase.TestCase{
 			Identity:        helpers.GetUUID(),
 			ProblemIdentity: p.Identity,
@@ -52,7 +52,7 @@ func (pro *ProblemController) ProblemCreate(c *gin.Context) {
 			Output:          ca.Output,
 		})
 	}
-	logger.Dump(p)
+	p.TestCases = testCases
 	//2.4将数据写入数据库
 	if ok := p.Create(); !ok {
 		response.Abort500(c, "写入数据失败")
@@ -73,4 +73,22 @@ func (pro *ProblemController) GetProblemList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"problem_list": list,
 	})
+}
+
+func (pro *ProblemController) GetProblemDetail(c *gin.Context) {
+	//1、获取表单，验证表单
+	request := requests.GetProblemDetailRequest{}
+	if ok := requests.Validate(c, &request, requests.GetProblemDetail); !ok {
+		return
+	}
+
+	//2、获取问题信息，返回客户端
+	p := problem.GetProblemDetail(request.Identity)
+	if p.Identity == "" {
+		response.Abort500(c, "获取信息失败")
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"details": p,
+		})
+	}
 }

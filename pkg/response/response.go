@@ -7,7 +7,7 @@ import (
 
 func Abort500(c *gin.Context, message string) {
 	c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-		"message": "发送短信失败",
+		"message": message,
 	})
 }
 

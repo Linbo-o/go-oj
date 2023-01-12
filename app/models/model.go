@@ -4,7 +4,7 @@ import "time"
 
 // BaseModel 模型基类
 type BaseModel struct {
-	ID uint64 `db:"id;primaryKey;autoIncrement;" json:"id,omitempty"`
+	ID uint64 `db:"id" json:"id,omitempty"`
 }
 
 // CommonTimestampsField 时间戳

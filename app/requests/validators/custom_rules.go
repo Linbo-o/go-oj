@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/thedevsaddam/govalidator"
 	"go-oj/pkg/database"
+	"go-oj/pkg/logger"
 	"strings"
 )
 
@@ -15,6 +16,9 @@ func init() {
 		tableName := param[0]
 		fieldName := param[1]
 		v := value.(string)
+		logger.Dump(tableName)
+		logger.Dump(fieldName)
+		logger.Dump(value)
 		if ok := database.IsExist(tableName, fieldName, v); ok {
 			return fmt.Errorf("%s 已经存在", field)
 		}

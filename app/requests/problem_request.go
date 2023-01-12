@@ -30,7 +30,6 @@ func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
 	message := govalidator.MapData{
 		"title": []string{
 			"required:title是必填项",
-			"not_exists:该问题题目已经存在",
 		},
 		"content":     []string{"required:content是必填项"},
 		"categories":  []string{"required:categories是必填项"},
@@ -60,4 +59,20 @@ func GetProblemList(data interface{}, c *gin.Context) map[string][]string {
 	}
 
 	return validate(rules, messages, data)
+}
+
+type GetProblemDetailRequest struct {
+	Identity string `json:"identity" valid:"identity"`
+}
+
+func GetProblemDetail(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"identity": []string{"required"},
+	}
+
+	message := govalidator.MapData{
+		"identity": []string{"required:identity是必填项"},
+	}
+
+	return validate(rules, message, data)
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"log"
 )
 
 var DB *sqlx.DB
@@ -25,9 +26,10 @@ func Connect(dsn string) {
 }
 
 func IsExist(table, filed, value string) bool {
-	sql_ := fmt.Sprintf("SELECT %s FROM %s WHERE %s=%s", filed, table, filed, value)
+	sql_ := fmt.Sprintf("SELECT %s FROM %s WHERE %s=?", filed, table, filed)
+	log.Println(sql_)
 	var val string
-	err := SQLDB.QueryRow(sql_).Scan(&val)
+	err := SQLDB.QueryRow(sql_, value).Scan(&val)
 	if err != nil {
 		return false
 	}

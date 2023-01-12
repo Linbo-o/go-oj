@@ -26,6 +26,7 @@ type ProblemBasic struct {
 }
 
 func (p *ProblemBasic) Create() bool {
+	logger.Dump(p.TestCases)
 	CreatedAt := time.Now()
 	UpdatedAt := time.Now()
 	//开启事物写入数据库
@@ -56,7 +57,7 @@ func (p *ProblemBasic) Create() bool {
 		_, err = tx.Exec(`INSERT INTO test_case (identity,problem_identity,input,output,created_at,updated_at) VALUES (?,?,?,?,?,?)`,
 			c.Identity, c.ProblemIdentity, c.Input, c.Output, CreatedAt, UpdatedAt)
 		if err != nil {
-			logger.ErrorString("create_porblem", "create", err.Error())
+			logger.ErrorString("create_problem", "create", err.Error())
 			return false
 		}
 	}
@@ -74,8 +75,8 @@ func GetProblemList(size, page int) map[string]string {
 	offset := (page - 1) * size
 
 	//2、访问数据库
-	sql := "SELECT identity,title FROM problem_basic WHERE id>?"
-	rows, err := database.DB.Queryx(sql, offset)
+	sql := "SELECT identity,title FROM problem_basic WHERE id>? & id<=?"
+	rows, err := database.DB.Queryx(sql, offset, offset+size)
 	if err != nil {
 		logger.LogIf(err)
 		return nil
@@ -92,4 +93,37 @@ func GetProblemList(size, page int) map[string]string {
 		list[title] = identity
 	}
 	return list
+}
+
+// GetProblemDetail 获取问题详细信息
+func GetProblemDetail(identity string) ProblemBasic {
+	p := ProblemBasic{}
+	//1、开启事务
+	tx, err := database.DB.Beginx()
+	if err != nil {
+		logger.LogIf(err)
+		return ProblemBasic{}
+	}
+	defer tx.Rollback()
+
+	//2、获取问题基础信息
+	err = tx.Get(&p, "SELECT * FROM problem_basic WHERE identity=?", identity)
+	if err != nil {
+		logger.Dump(p)
+		logger.LogIf(err)
+	}
+	//3、获取问题分类信息
+	err = tx.Select(&p.Categories, "SELECT * FROM problem_category WHERE problem_identity=?", identity)
+	if err != nil {
+		logger.Dump(p.Categories)
+		logger.LogIf(err)
+	}
+	//4、获取问题测试用例
+	err = tx.Select(&p.TestCases, "SELECT * FROM test_case WHERE problem_identity=?", identity)
+	if err != nil {
+		logger.Dump(p.TestCases)
+		logger.LogIf(err)
+	}
+	tx.Commit()
+	return p
 }

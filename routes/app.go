@@ -30,6 +30,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			pbc := new(problem.ProblemController)
 			problemGroup.POST("/create", pbc.ProblemCreate)
 			problemGroup.POST("/problem-list", pbc.GetProblemList)
+			problemGroup.POST("/problem-detail", pbc.GetProblemDetail)
 		}
 	}
 }
