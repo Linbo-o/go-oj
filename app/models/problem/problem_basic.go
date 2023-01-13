@@ -69,6 +69,33 @@ func (p *ProblemBasic) Create() bool {
 	return true
 }
 
+func (p *ProblemBasic) Modify() bool {
+	//1、开启事务
+	tx, err := database.DB.Beginx()
+	if err != nil {
+		logger.ErrorString("problem", "modify", err.Error())
+		return false
+	}
+	defer tx.Rollback()
+
+	//2、修改problem_basic数据
+	p.UpdatedAt = time.Now()
+	sql := "UPDATE problem_basic SET title=?,content=?,max_runtime=?,max_mem=?,updated_at=?  WHERE identity=?"
+	_, err = tx.Exec(sql, p.Title, p.Content, p.MaxRuntime, p.MaxMem, p.UpdatedAt, p.Identity)
+	if err != nil {
+		logger.ErrorString("problem", "modify", err.Error())
+		return false
+	}
+
+	//commit
+	err = tx.Commit()
+	if err != nil {
+		logger.ErrorString("problem", "modify", err.Error())
+		return false
+	}
+	return true
+}
+
 // GetProblemList 返回问题的 title-identity 列表
 func GetProblemList(size, page int) map[string]string {
 	//1、计算偏移量

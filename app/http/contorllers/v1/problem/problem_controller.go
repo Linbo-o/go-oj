@@ -94,6 +94,30 @@ func (pro *ProblemController) GetProblemDetail(c *gin.Context) {
 	}
 }
 
+func (pro *ProblemController) ProblemModify(c *gin.Context) {
+	//1、获取表单，检查表单
+	request := requests.ProblemModifyRequest{}
+	if ok := requests.Validate(c, &request, requests.ProblemModify); !ok {
+		return
+	}
+
+	//2、创建信息
+	p := problem.ProblemBasic{
+		Identity:   request.Identity,
+		Title:      request.Title,
+		Content:    request.Content,
+		MaxRuntime: request.MaxRuntime,
+		MaxMem:     request.MaxMem,
+	}
+
+	//3、更新信息,返回结果到客户端
+	if ok := p.Modify(); !ok {
+		response.Abort500(c, "更新题目失败")
+	} else {
+		response.Success(c)
+	}
+}
+
 func (pro *ProblemController) ProblemJudge(c *gin.Context) {
 	//1、获取参数并检验
 	request := requests.SubmitRequest{}

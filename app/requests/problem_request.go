@@ -28,9 +28,7 @@ func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
 
 	//2、定制错误信息
 	message := govalidator.MapData{
-		"title": []string{
-			"required:title是必填项",
-		},
+		"title":       []string{"required:title是必填项"},
 		"content":     []string{"required:content是必填项"},
 		"categories":  []string{"required:categories是必填项"},
 		"max_runtime": []string{"required:content是必填项"},
@@ -74,5 +72,36 @@ func GetProblemDetail(data interface{}, c *gin.Context) map[string][]string {
 		"identity": []string{"required:identity是必填项"},
 	}
 
+	return validate(rules, message, data)
+}
+
+type ProblemModifyRequest struct {
+	Identity   string `json:"identity" valid:"identity"`
+	Title      string `json:"title"    db:"title" valid:"title"`
+	Content    string `json:"content"  valid:"content"`
+	MaxRuntime int    `json:"max_runtime"  valid:"max_runtime"`
+	MaxMem     int    `json:"max_mem"  valid:"max_mem"`
+}
+
+func ProblemModify(data interface{}, c *gin.Context) map[string][]string {
+	//1、定制规则
+	rules := govalidator.MapData{
+		"identity":    []string{"required"},
+		"title":       []string{"required", "not_exists:problem_basic,title"},
+		"content":     []string{"required"},
+		"max_runtime": []string{"required"},
+		"max_mem":     []string{"required"},
+	}
+
+	//2、定制错误信息
+	message := govalidator.MapData{
+		"identity":    []string{"required:identity是必填项"},
+		"title":       []string{"required:title是必填项"},
+		"content":     []string{"required:content是必填项"},
+		"max_runtime": []string{"required:content是必填项"},
+		"max_mem":     []string{"required:max_mem是必填项"},
+	}
+
+	//3、对上面规则进行验证，返回错误信息
 	return validate(rules, message, data)
 }
