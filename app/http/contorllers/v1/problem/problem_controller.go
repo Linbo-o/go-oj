@@ -5,6 +5,7 @@ import (
 	v1 "go-oj/app/http/contorllers/v1"
 	"go-oj/app/models/problem"
 	pc "go-oj/app/models/problem-category"
+	"go-oj/app/models/submit"
 	"go-oj/app/models/testcase"
 	"go-oj/app/requests"
 	"go-oj/pkg/helpers"
@@ -89,6 +90,49 @@ func (pro *ProblemController) GetProblemDetail(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"details": p,
+		})
+	}
+}
+
+func (pro *ProblemController) ProblemJudge(c *gin.Context) {
+	//1、获取参数并检验
+	request := requests.SubmitRequest{}
+	if ok := requests.Validate(c, &request, requests.Submit); !ok {
+		return
+	}
+
+	//2、创建提交信息，保存提交代码到本地
+	su := submit.SubmitBasic{
+		Identity:        helpers.GetUUID(),
+		ProblemIdentity: request.ProblemIdentity,
+		UserIdentity:    c.GetString("user_identity"),
+	}
+	if ok := su.Save([]byte(request.Code)); !ok {
+		response.Abort500(c, "保存代码失败")
+		return
+	}
+
+	//3、获取测试用例
+	testCases := testcase.GetTestCases(su.ProblemIdentity)
+	if testCases == nil {
+		response.Abort500(c, "获取测试用例失败")
+		return
+	}
+
+	//4、代码检测
+	message, passCnt := su.Judge(testCases)
+	if message == "" {
+		response.Abort500(c, "内部判断代码出错")
+		return
+	}
+
+	//5、更新数据库信息
+	if ok := su.Commit(); !ok {
+		response.Abort500(c, "更新数据库失败")
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"message": message,
+			"count":   passCnt,
 		})
 	}
 }
