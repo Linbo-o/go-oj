@@ -37,3 +37,28 @@ func LoginByPhone(data interface{}, c *gin.Context) map[string][]string {
 
 	return errs
 }
+
+type LoginByPasswordRequest struct {
+	//可以是手机、邮箱、用户名中任意一种
+	LoginId  string `json:"login_id" valid:"login_id"`
+	Password string `json:"password" valid:"password"`
+}
+
+func LoginByPassword(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"login_id": []string{"required"},
+		"password": []string{"required", "min:6"},
+	}
+
+	messages := govalidator.MapData{
+		"login_id": []string{
+			"required:用户名为必填项",
+		},
+		"password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+	}
+
+	return validate(rules, messages, data)
+}

@@ -5,6 +5,7 @@ import (
 	"go-oj/app/http/contorllers/v1"
 	"go-oj/app/models/user"
 	"go-oj/app/requests"
+	"go-oj/pkg/hash"
 	"go-oj/pkg/helpers"
 	jwtpkg "go-oj/pkg/jwt"
 	"go-oj/pkg/logger"
@@ -53,7 +54,7 @@ func (sc *SignupController) SignupUsingPhone(c *gin.Context) {
 	u := user.UserBasic{
 		Identity:  helpers.GetUUID(),
 		Name:      request.Name,
-		Password:  request.Password,
+		Password:  hash.Encrypt(request.Password),
 		Phone:     request.Phone,
 		PassNum:   0,
 		SubmitNum: 0,

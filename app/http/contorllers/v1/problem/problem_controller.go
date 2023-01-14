@@ -153,12 +153,12 @@ func (pro *ProblemController) ProblemJudge(c *gin.Context) {
 	err := su.Judge(testCases)
 	if err != nil {
 		response.Abort500(c, "评测失败,err:"+err.Error())
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"message":         "评测完成",
-			"submit_identity": su.Identity,
-		})
+		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"submit_identity": su.Identity,
+	})
 }
 
 func (pro *ProblemController) ProblemJudgeResult(c *gin.Context) {

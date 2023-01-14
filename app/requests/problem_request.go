@@ -7,7 +7,7 @@ import (
 	"go-oj/app/requests/validators"
 )
 
-//ProblemCreateRequest 创建问题
+// ProblemCreateRequest 创建问题
 type ProblemCreateRequest struct {
 	Title      string               `json:"title"    db:"title" valid:"title"`
 	Content    string               `json:"content"  valid:"content"`
@@ -47,7 +47,7 @@ func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
 	return validate(rules, message, data)
 }
 
-//ProblemModifyRequest 修改题目
+// ProblemModifyRequest 修改题目
 type ProblemModifyRequest struct {
 	Identity   string `json:"identity" valid:"identity"`
 	Title      string `json:"title"    db:"title" valid:"title"`
@@ -84,7 +84,7 @@ func ProblemModify(data interface{}, c *gin.Context) map[string][]string {
 	return validate(rules, message, data)
 }
 
-//GetProblemListRequest 获取题目列表
+// GetProblemListRequest 获取题目列表
 type GetProblemListRequest struct {
 	Size int `json:"size" valid:"size"`
 	Page int `json:"page" valid:"page"`
@@ -104,7 +104,7 @@ func GetProblemList(data interface{}, c *gin.Context) map[string][]string {
 	return validate(rules, messages, data)
 }
 
-//GetProblemDetailRequest 获取题目详情
+// GetProblemDetailRequest 获取题目详情
 type GetProblemDetailRequest struct {
 	Identity string `json:"identity" valid:"identity"`
 }

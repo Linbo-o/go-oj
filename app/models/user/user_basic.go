@@ -3,6 +3,7 @@ package user
 import (
 	"go-oj/app/models"
 	"go-oj/pkg/database"
+	"go-oj/pkg/hash"
 	"go-oj/pkg/logger"
 	"time"
 )
@@ -47,6 +48,17 @@ func GetByPhone(phone string) UserBasic {
 	return u
 }
 
+func GetByMulti(multiID string) UserBasic {
+	u := UserBasic{}
+	sql := "SELECT identity,name,phone,mail,pass_num,submit_num,is_admin From user_basic Where phone=? OR name=? OR mail=?"
+	err := database.DB.QueryRowx(sql, multiID, multiID, multiID).StructScan(&u)
+	if err != nil {
+		logger.DebugString("user", "GetByPhone", err.Error())
+		return UserBasic{}
+	}
+	return u
+}
+
 func Get(identity string) UserBasic {
 	u := UserBasic{}
 	sql := "SELECT identity,name,phone,mail,pass_num,submit_num,is_admin From user_basic Where identity=?"
@@ -60,4 +72,8 @@ func Get(identity string) UserBasic {
 
 func (u *UserBasic) GetIdentity() string {
 	return u.Identity
+}
+
+func (u *UserBasic) ComparePassword(password string) bool {
+	return hash.CheckPassword(u.Password, password)
 }

@@ -20,6 +20,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 
 			loc := new(auth.LoginController)
 			authGroup.POST("/login/using-phone", loc.LoginByPhone)
+			authGroup.POST("/login/using-password", loc.LoginByPassword)
 
 			vcc := new(auth.VerifyCodeController)
 			authGroup.POST("/verify-code/captcha", vcc.ShowCaptcha)

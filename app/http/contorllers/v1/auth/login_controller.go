@@ -6,6 +6,7 @@ import (
 	"go-oj/app/requests"
 	"go-oj/pkg/auth"
 	jwtpkg "go-oj/pkg/jwt"
+	"go-oj/pkg/response"
 	"net/http"
 )
 
@@ -27,6 +28,22 @@ func (lc *LoginController) LoginByPhone(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"error": err.Error(),
 		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"token": jwtpkg.NewJWT().IssueToken(u.Identity, u.Name),
+		})
+	}
+}
+
+func (lc *LoginController) LoginByPassword(c *gin.Context) {
+	request := requests.LoginByPasswordRequest{}
+	if ok := requests.Validate(c, &request, requests.LoginByPassword); !ok {
+		return
+	}
+
+	u, _ := auth.Attempt(request.LoginId)
+	if u.Identity == "" {
+		response.Unauthorized(c, "账号不存在或密码错误")
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"token": jwtpkg.NewJWT().IssueToken(u.Identity, u.Name),

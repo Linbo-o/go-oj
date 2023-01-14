@@ -139,35 +139,37 @@ func (su *SubmitBasic) Judge(testCases []*tc.TestCase) error {
 		}()
 	}
 	//等待代码检测返回结果
-	select {
-	case <-CE:
-		msg = "编译出错 err:" + msg
-		su.Status = CompilationERR
-	case <-WA:
-		msg = "答案错误"
-		su.Status = WrongAnswer
-	case <-AC:
-		msg = "答案正确"
-		su.Status = Accepted
-		su.IsPass = 1
-	case <-OOM:
-		msg = "运行超内存"
-		su.Status = MemorizeErr
-	case <-time.After(time.Millisecond * time.Duration(maxRuntime)):
-		if passCnt == len(testCases) {
+	go func() {
+		select {
+		case <-CE:
+			msg = "编译出错 err:" + msg
+			su.Status = CompilationERR
+		case <-WA:
+			msg = "答案错误"
+			su.Status = WrongAnswer
+		case <-AC:
 			msg = "答案正确"
 			su.Status = Accepted
-		} else {
-			msg = "运行超时"
-			su.Status = RunTimeERR
+			su.IsPass = 1
+		case <-OOM:
+			msg = "运行超内存"
+			su.Status = MemorizeErr
+		case <-time.After(time.Millisecond * time.Duration(maxRuntime)):
+			if passCnt == len(testCases) {
+				msg = "答案正确"
+				su.Status = Accepted
+			} else {
+				msg = "运行超时"
+				su.Status = RunTimeERR
+			}
 		}
-	}
 
-	//3、更新评测状态
-	if err := su.UpdateStatus(); err != nil {
-		logger.LogIf(err)
-		return err
-	}
+		//3、更新评测状态
+		if err := su.UpdateStatus(); err != nil {
+			logger.LogIf(err)
+			return
+		}
+	}()
 	return nil
 }
 
