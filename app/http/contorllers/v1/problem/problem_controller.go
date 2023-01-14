@@ -129,7 +129,7 @@ func (pro *ProblemController) ProblemJudge(c *gin.Context) {
 	su := submit.SubmitBasic{
 		Identity:        helpers.GetUUID(),
 		ProblemIdentity: request.ProblemIdentity,
-		UserIdentity:    c.GetString("user_identity"),
+		UserIdentity:    c.GetString("current_user_identity"),
 	}
 	if ok := su.Save([]byte(request.Code)); !ok {
 		response.Abort500(c, "保存代码失败")

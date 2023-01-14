@@ -35,5 +35,8 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			problemGroup.POST("/problem-detail", pbc.GetProblemDetail)
 			problemGroup.POST("/problem-judge", pbc.ProblemJudge)
 		}
+
+		//用于测试
+		TestRoute(r)
 	}
 }

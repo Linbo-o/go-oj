@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
 	"go-oj/app/models/testcase"
+	"go-oj/app/requests/validators"
 )
 
 type ProblemCreateRequest struct {
@@ -16,6 +17,11 @@ type ProblemCreateRequest struct {
 }
 
 func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
+	// 先验证是否为管理员
+	errs := validators.ValidateIsAdmin(c)
+	if errs != nil {
+		return errs
+	}
 	//1、定制规则
 	rules := govalidator.MapData{
 		"title":       []string{"required", "not_exists:problem_basic,title"},
