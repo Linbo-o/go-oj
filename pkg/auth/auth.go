@@ -23,6 +23,6 @@ func CurrentUser(c *gin.Context) user.UserBasic {
 		logger.LogIf(errors.New("无法获取用户"))
 		return user.UserBasic{}
 	}
-	// db is now a *DB value
+
 	return userModel
 }

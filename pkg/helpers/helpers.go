@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Empty 类似于 PHP 的 empty() 函数
+// Empty 判断各种类型的空
 func Empty(val interface{}) bool {
 	if val == nil {
 		return true

@@ -143,20 +143,36 @@ func (pro *ProblemController) ProblemJudge(c *gin.Context) {
 		return
 	}
 
-	//4、代码检测
-	message, passCnt := su.Judge(testCases)
-	if message == "" {
-		response.Abort500(c, "内部判断代码出错")
+	//4、将提交数据存入数据库，读取评测结果从数据库中读取
+	if ok := su.Commit(); !ok {
+		response.Abort500(c, "存入数据库失败")
 		return
 	}
 
-	//5、更新数据库信息
-	if ok := su.Commit(); !ok {
-		response.Abort500(c, "更新数据库失败")
+	//5、代码检测
+	err := su.Judge(testCases)
+	if err != nil {
+		response.Abort500(c, "评测失败,err:"+err.Error())
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"message": message,
-			"count":   passCnt,
+			"message":         "评测完成",
+			"submit_identity": su.Identity,
 		})
 	}
+}
+
+func (pro *ProblemController) ProblemJudgeResult(c *gin.Context) {
+	identity := c.PostForm("identity")
+	if identity == "" {
+		response.Unauthorized(c, "identity 是必填项")
+		return
+	}
+	msg := submit.GetStatus(identity)
+	if msg == "" {
+		response.Abort500(c, "请求错误")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": msg,
+	})
 }

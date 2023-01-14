@@ -16,18 +16,19 @@ func TestRoute(r *gin.Engine) {
 	testGroup := r.Group("/test")
 	{
 		//1、通过jwt获取用户信息
-		testGroup.GET("/user-detail", middlewares.AuthJWT(), func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"user": auth.CurrentUser(c),
-			})
-		})
-
+		testGroup.GET("/user-detail", middlewares.AuthJWT(), userDetail)
 		//2、创建管理员账号
 		testGroup.POST("/admin-create", createAdminUser)
 	}
 }
 
 var once sync.Once
+
+func userDetail(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"user": auth.CurrentUser(c),
+	})
+}
 
 func createAdminUser(c *gin.Context) {
 	once.Do(func() {

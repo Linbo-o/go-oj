@@ -1,10 +1,6 @@
 
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------
--- Table structure for category_basic
--- ----------------------------
 DROP TABLE IF EXISTS `category_basic`;
 CREATE TABLE `category_basic` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -13,13 +9,10 @@ CREATE TABLE `category_basic` (
   `parent_id` int(11) DEFAULT '0' COMMENT '父级ID',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for problem_basic
--- ----------------------------
+
 DROP TABLE IF EXISTS `problem_basic`;
 CREATE TABLE `problem_basic` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -32,13 +25,10 @@ CREATE TABLE `problem_basic` (
   `submit_num` int(11) DEFAULT '0' COMMENT '提交次数',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for problem_category
--- ----------------------------
+
 DROP TABLE IF EXISTS `problem_category`;
 CREATE TABLE `problem_category` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -46,13 +36,10 @@ CREATE TABLE `problem_category` (
   `category_id` int(11) DEFAULT NULL COMMENT '分类ID',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for submit_basic
--- ----------------------------
+
 DROP TABLE IF EXISTS `submit_basic`;
 CREATE TABLE `submit_basic` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -60,16 +47,13 @@ CREATE TABLE `submit_basic` (
   `problem_identity` varchar(36) DEFAULT NULL COMMENT '问题的唯一标识',
   `user_identity` varchar(36) DEFAULT NULL COMMENT '用户的唯一标识',
   `path` varchar(255) DEFAULT NULL COMMENT '代码路径',
-  `status` tinyint(1) DEFAULT '-1' COMMENT '【-1-待判断，1-答案正确，2-答案错误，3-运行超时，4-运行超内存】',
+  `status` tinyint(1) DEFAULT '-1' COMMENT '【-1-待判断，1-答案正确，2-答案错误，3-运行超时，4-运行超内存,5-编译错误】',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for test_case
--- ----------------------------
+
 DROP TABLE IF EXISTS `test_case`;
 CREATE TABLE `test_case` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -79,13 +63,10 @@ CREATE TABLE `test_case` (
   `output` text,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for user_basic
--- ----------------------------
+
 DROP TABLE IF EXISTS `user_basic`;
 CREATE TABLE `user_basic` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -99,8 +80,7 @@ CREATE TABLE `user_basic` (
   `is_admin` tinyint(1) DEFAULT '0' COMMENT '是否是管理员【0-否，1-是】',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

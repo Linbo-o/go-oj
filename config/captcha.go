@@ -23,12 +23,6 @@ func init() {
 
 			// 过期时间，单位是分钟
 			"expire_time": 150,
-
-			// debug 模式下的过期时间，方便本地开发调试
-			"debug_expire_time": 10080,
-
-			// 非 production 环境，使用此 key 可跳过验证，方便测试
-			"testing_key": "captcha_skip_test",
 		}
 	})
 }

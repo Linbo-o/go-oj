@@ -7,6 +7,7 @@ import (
 	"go-oj/app/requests/validators"
 )
 
+//ProblemCreateRequest 创建问题
 type ProblemCreateRequest struct {
 	Title      string               `json:"title"    db:"title" valid:"title"`
 	Content    string               `json:"content"  valid:"content"`
@@ -46,41 +47,7 @@ func ProblemCreate(data interface{}, c *gin.Context) map[string][]string {
 	return validate(rules, message, data)
 }
 
-type GetProblemListRequest struct {
-	Size int `json:"size" valid:"size"`
-	Page int `json:"page" valid:"page"`
-}
-
-func GetProblemList(data interface{}, c *gin.Context) map[string][]string {
-	rules := govalidator.MapData{
-		"size": []string{"required"},
-		"page": []string{"required"},
-	}
-
-	messages := govalidator.MapData{
-		"size": []string{"required:size是必填项"},
-		"page": []string{"required:page是必填项"},
-	}
-
-	return validate(rules, messages, data)
-}
-
-type GetProblemDetailRequest struct {
-	Identity string `json:"identity" valid:"identity"`
-}
-
-func GetProblemDetail(data interface{}, c *gin.Context) map[string][]string {
-	rules := govalidator.MapData{
-		"identity": []string{"required"},
-	}
-
-	message := govalidator.MapData{
-		"identity": []string{"required:identity是必填项"},
-	}
-
-	return validate(rules, message, data)
-}
-
+//ProblemModifyRequest 修改题目
 type ProblemModifyRequest struct {
 	Identity   string `json:"identity" valid:"identity"`
 	Title      string `json:"title"    db:"title" valid:"title"`
@@ -90,6 +57,11 @@ type ProblemModifyRequest struct {
 }
 
 func ProblemModify(data interface{}, c *gin.Context) map[string][]string {
+	// 先验证是否为管理员
+	errs := validators.ValidateIsAdmin(c)
+	if errs != nil {
+		return errs
+	}
 	//1、定制规则
 	rules := govalidator.MapData{
 		"identity":    []string{"required"},
@@ -109,5 +81,42 @@ func ProblemModify(data interface{}, c *gin.Context) map[string][]string {
 	}
 
 	//3、对上面规则进行验证，返回错误信息
+	return validate(rules, message, data)
+}
+
+//GetProblemListRequest 获取题目列表
+type GetProblemListRequest struct {
+	Size int `json:"size" valid:"size"`
+	Page int `json:"page" valid:"page"`
+}
+
+func GetProblemList(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"size": []string{"required"},
+		"page": []string{"required"},
+	}
+
+	messages := govalidator.MapData{
+		"size": []string{"required:size是必填项"},
+		"page": []string{"required:page是必填项"},
+	}
+
+	return validate(rules, messages, data)
+}
+
+//GetProblemDetailRequest 获取题目详情
+type GetProblemDetailRequest struct {
+	Identity string `json:"identity" valid:"identity"`
+}
+
+func GetProblemDetail(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"identity": []string{"required"},
+	}
+
+	message := govalidator.MapData{
+		"identity": []string{"required:identity是必填项"},
+	}
+
 	return validate(rules, message, data)
 }

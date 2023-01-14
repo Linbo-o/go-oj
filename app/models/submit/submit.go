@@ -10,7 +10,6 @@ import (
 	"go-oj/pkg/helpers"
 	"go-oj/pkg/logger"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -65,16 +64,18 @@ const (
 	CompilationERR
 )
 
-func (su *SubmitBasic) Judge(testCases []*tc.TestCase) (msg string, passCnt int) {
+func (su *SubmitBasic) Judge(testCases []*tc.TestCase) error {
 	//1、获取问题的最大运行时间和内存
 	var maxRuntime, maxMem int
 	err := database.DB.QueryRow("SELECT max_runtime,max_mem FROM problem_basic WHERE identity=?", su.ProblemIdentity).Scan(&maxRuntime, &maxMem)
 	if err != nil {
 		logger.ErrorString("submit", "judge", err.Error())
-		return
+		return err
 	}
 
 	//2、判断代码相关逻辑
+	var msg string
+	var passCnt int
 	// 答案错误的channel
 	WA := make(chan int)
 	// 超内存的channel
@@ -95,11 +96,13 @@ func (su *SubmitBasic) Judge(testCases []*tc.TestCase) (msg string, passCnt int)
 			cmd.Stdout = &stdout
 			stdin, err := cmd.StdinPipe()
 			if err != nil {
-				log.Println(err)
+				logger.LogIf(err)
+				return
 			}
 			_, err = io.WriteString(stdin, cas.Input+"\n")
 			if err != nil {
-				log.Println(err)
+				logger.LogIf(err)
+				return
 			}
 
 			//获取运行的内存信息
@@ -107,7 +110,7 @@ func (su *SubmitBasic) Judge(testCases []*tc.TestCase) (msg string, passCnt int)
 			runtime.ReadMemStats(&begin)
 			//运行代码，捕获编译状态
 			if err = cmd.Run(); err != nil {
-				log.Println(err)
+				logger.LogIf(err)
 				msg = err.Error()
 				CE <- 1
 				return
@@ -159,7 +162,18 @@ func (su *SubmitBasic) Judge(testCases []*tc.TestCase) (msg string, passCnt int)
 			su.Status = RunTimeERR
 		}
 	}
-	return
+
+	//3、更新评测状态
+	if err := su.UpdateStatus(); err != nil {
+		logger.LogIf(err)
+		return err
+	}
+	return nil
+}
+
+func (su *SubmitBasic) UpdateStatus() error {
+	_, err := database.DB.Exec("UPDATE submit_basic SET status=? WHERE identity=?", su.Status, su.Identity)
+	return err
 }
 
 func (su *SubmitBasic) Commit() bool {
@@ -200,4 +214,28 @@ func (su *SubmitBasic) Commit() bool {
 		return false
 	}
 	return true
+}
+
+func GetStatus(identity string) string {
+	var status int
+	err := database.DB.QueryRow("SELECT status FROM submit_basic WHERE identity=?", identity).Scan(&status)
+	if err != nil {
+		logger.LogIf(err)
+		return ""
+	}
+	switch status {
+	case -1:
+		return "正在等待评测"
+	case 1:
+		return "Accepted"
+	case 2:
+		return "WrongAnswer"
+	case 3:
+		return "RuntimeError"
+	case 4:
+		return "MemError"
+	case 5:
+		return "CompilationError"
+	}
+	return ""
 }

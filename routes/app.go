@@ -34,6 +34,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			problemGroup.POST("/problem-list", pbc.GetProblemList)
 			problemGroup.POST("/problem-detail", pbc.GetProblemDetail)
 			problemGroup.POST("/problem-judge", pbc.ProblemJudge)
+			problemGroup.POST("/judge-status", pbc.ProblemJudgeResult)
 		}
 
 		//用于测试

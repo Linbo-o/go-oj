@@ -20,12 +20,8 @@ var (
 	ErrHeaderMalformed        error = errors.New("请求头中 Authorization 格式有误")
 )
 
-// JWT 定义一个jwt对象
 type JWT struct {
-	// 秘钥，用以加密 JWT，读取配置信息 app.key
-	SignKey []byte
-
-	// 刷新 Token 的最大过期时间
+	SignKey    []byte
 	MaxRefresh time.Duration
 }
 
@@ -41,7 +37,6 @@ type JWTCustomClaims struct {
 	UserName     string `json:"name"`
 	ExpireAtTime int64  `json:"expire_time"`
 
-	// StandardClaims 结构体实现了 Claims 接口继承了  Valid() 方法
 	jwtpkg.StandardClaims
 }
 
