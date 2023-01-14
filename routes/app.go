@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-oj/app/http/contorllers/v1/auth"
 	"go-oj/app/http/contorllers/v1/problem"
+	"go-oj/app/http/middlewares"
 )
 
 func RegisterAPIRoutes(r *gin.Engine) {
@@ -25,7 +26,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			authGroup.POST("/verify-code/phone", vcc.VerifyCodePhone)
 		}
 
-		problemGroup := v1.Group("/problem")
+		problemGroup := v1.Group("/problem", middlewares.AuthJWT())
 		{
 			pbc := new(problem.ProblemController)
 			problemGroup.POST("/create", pbc.ProblemCreate)

@@ -46,3 +46,18 @@ func GetByPhone(phone string) UserBasic {
 	}
 	return u
 }
+
+func Get(identity string) UserBasic {
+	u := UserBasic{}
+	sql := "SELECT identity,name,phone,mail,pass_num,submit_num,is_admin From user_basic Where identity=?"
+	err := database.DB.QueryRowx(sql, identity).StructScan(&u)
+	if err != nil {
+		logger.DebugString("user", "GetByPhone", err.Error())
+		return UserBasic{}
+	}
+	return u
+}
+
+func (u *UserBasic) GetIdentity() string {
+	return u.Identity
+}
