@@ -47,7 +47,7 @@
 
 ### 1.2 代码行数
 
-![](E:\GoProject\src\go-oj\images\1.png)
+![](.\images\1.png)
 
 ### 1.3 所有API
 
