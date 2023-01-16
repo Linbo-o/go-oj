@@ -146,5 +146,5 @@
 
 3、调用`problem-status`，从数据库中获取评测状态和结果
 
-[详情](http://192.168.1.8:10393/shareDoc?issue=00ade2eed528a8a4bf6abd3b9ef579a7&target_id=0f9839ea-beb2-41e0-a791-846f18d3dbd4)
+[详情](https://console-docs.apipost.cn/preview/eabf0fdf99abced2/1940b464e5a7c1f8)
 
