@@ -47,7 +47,7 @@
 
 ### 1.2 代码行数
 
-![](.\images\1.png)
+![](https://github.com/Linbo-o/go-oj/blob/main/images/1.png)
 
 ### 1.3 所有API
 
