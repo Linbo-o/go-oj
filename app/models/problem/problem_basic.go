@@ -102,8 +102,10 @@ func GetProblemList(size, page int) map[string]string {
 	offset := (page - 1) * size
 
 	//2、访问数据库
-	sql := "SELECT identity,title FROM problem_basic WHERE id>? & id<=?"
+	sql := "SELECT identity,title FROM problem_basic WHERE id>? and id<=?"
 	rows, err := database.DB.Queryx(sql, offset, offset+size)
+	logger.Dump(offset, "offset")
+	logger.Dump(offset+size, "offset+size")
 	if err != nil {
 		logger.LogIf(err)
 		return nil

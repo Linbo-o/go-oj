@@ -131,7 +131,7 @@ func (pro *ProblemController) ProblemJudge(c *gin.Context) {
 		ProblemIdentity: request.ProblemIdentity,
 		UserIdentity:    c.GetString("current_user_identity"),
 	}
-	if ok := su.Save([]byte(request.Code)); !ok {
+	if ok := su.Save(request.Code); !ok {
 		response.Abort500(c, "保存代码失败")
 		return
 	}

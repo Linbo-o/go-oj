@@ -52,7 +52,7 @@ func LoginByPassword(data interface{}, c *gin.Context) map[string][]string {
 
 	messages := govalidator.MapData{
 		"login_id": []string{
-			"required:用户名为必填项",
+			"required:login_id为必填项",
 		},
 		"password": []string{
 			"required:密码为必填项",
